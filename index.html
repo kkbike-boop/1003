@@ -163,31 +163,207 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-lg-8 mx-auto mbr-form" data-form-type="formoid">
-                <form action="https://mobirise.eu/" method="POST" class="mbr-form form-with-styler" data-form-title="Form Name"><input type="hidden" name="email" data-form-email="true" value="BF81Fkan+OIqtXAzlYL8kPy2T3gzklkqH7vk8O1JCpf7/Gx+eIKd8wkwKvvigB8MlO2O7fGEpVdPjEnOtOWMrZQkdXoEIlYt4GFGxXB+P9cxN5Zbez9SQJ/RqaeBXvSi">
-                    <div class="row">
-                        <div hidden="hidden" data-form-alert="" class="alert alert-success col-12">Thanks for filling out the form!</div>
-                        <div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">
-                            Oops...! some problem!
-                        </div>
-                    </div>
-                    <div class="dragArea row">
-                        <div class="col-md col-sm-12 form-group mb-3" data-for="name">
-                            <input type="text" name="name" placeholder="Name" data-form-field="name" class="form-control" value="" id="name-form02-b">
-                        </div>
-                        <div class="col-md col-sm-12 form-group mb-3" data-for="email">
-                            <input type="email" name="email" placeholder="E-mail" data-form-field="email" class="form-control" value="" id="email-form02-b">
-                        </div>
-                        <div class="col-12 form-group mb-3" data-for="phone">
-                            <input type="tel" name="phone" placeholder="Phone" data-form-field="phone" class="form-control" value="" id="phone-form02-b">
-                        </div>
-                        <div class="col-12 form-group mb-3" data-for="textarea">
-                            <textarea name="textarea" placeholder="Message" data-form-field="textarea" class="form-control" id="textarea-form02-b"></textarea>
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
-                            <button type="submit" class="btn btn-primary display-7">Send message</button>
-                        </div>
-                    </div>
-                </form>
+                <form id="custom-registration-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfjxT2M0RN8kHF5hQExtwdjkceLdPt-b3rQytJzlxU6Mr6g3g/formResponse?" method="POST" class="mbr-form form-with-styler">
+    <div class="row">
+        <div hidden="hidden" data-form-alert="" class="alert alert-success col-12">感謝您填寫表單！</div>
+        <div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">
+            哎呀...！發生了一些問題！
+        </div>
+    </div>
+    <div class="dragArea row">
+        <div class="col-md col-sm-12 form-group mb-3" data-for="name">
+            <input type="text" name="name" placeholder="姓名" data-form-field="name" class="form-control" required id="name-form-custom">
+        </div>
+        <div class="col-md col-sm-12 form-group mb-3" data-for="email">
+            <input type="email" name="email" placeholder="E-mail" data-form-field="email" class="form-control" required id="email-form-custom">
+        </div>
+        <div class="col-12 form-group mb-3" data-for="class">
+            <input type="text" name="class" placeholder="班級" data-form-field="class" class="form-control" required id="class-form-custom">
+        </div>
+        <div class="col-12 form-group mb-3" data-for="seat_number">
+            <input type="number" name="seat_number" placeholder="座號" data-form-field="seat_number" class="form-control" required id="seat_number-form-custom">
+        </div>
+
+        <div class="col-12 form-group mb-3">
+            <label for="preference1-form-custom">第一志願</label>
+            <select name="preference1" data-form-field="preference1" class="form-control preference-select" required id="preference1-form-custom">
+                <option value="" disabled selected>請選擇</option>
+            </select>
+        </div>
+        <div class="col-12 form-group mb-3">
+            <label for="preference2-form-custom">第二志願</label>
+            <select name="preference2" data-form-field="preference2" class="form-control preference-select" required id="preference2-form-custom">
+                <option value="" disabled selected>請選擇</option>
+            </select>
+        </div>
+        <div class="col-12 form-group mb-3">
+            <label for="preference3-form-custom">第三志願</label>
+            <select name="preference3" data-form-field="preference3" class="form-control preference-select" required id="preference3-form-custom">
+                <option value="" disabled selected>請選擇</option>
+            </select>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
+            <button type="submit" class="btn btn-primary display-7">送出報名</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const clubs = ["資研社", "魔術社", "童軍社", "康輔社", "文學社", "英詩社"];
+        const selectElements = document.querySelectorAll('.preference-select');
+        const form = document.getElementById('custom-registration-form');
+
+        // 1. Populate all dropdowns with options
+        function populateSelects() {
+            selectElements.forEach(select => {
+                // Keep the default "請選擇" option
+                let existingOptions = select.querySelector('option[value=""]');
+                if (!existingOptions) {
+                    existingOptions = document.createElement('option');
+                    existingOptions.value = "";
+                    existingOptions.text = "請選擇";
+                    existingOptions.disabled = true;
+                    existingOptions.selected = true;
+                    select.appendChild(existingOptions);
+                }
+                
+                // Clear and re-populate with all clubs
+                while (select.children.length > 1) { // Clear all except the first "請選擇"
+                    select.removeChild(select.lastChild);
+                }
+                
+                clubs.forEach(club => {
+                    const option = document.createElement('option');
+                    option.value = club;
+                    option.text = club;
+                    select.appendChild(option);
+                });
+            });
+        }
+        
+        populateSelects();
+
+        // 2. Handle the selection logic (disable already selected options)
+        function updateOptions() {
+            const selectedValues = Array.from(selectElements).map(select => select.value).filter(val => val !== "");
+
+            selectElements.forEach(currentSelect => {
+                const currentValue = currentSelect.value;
+                
+                // Clear the options list
+                let tempClubs = [...clubs];
+                
+                // Keep the "請選擇" option
+                let existingDefault = currentSelect.querySelector('option[value=""]');
+
+                // Clear and re-populate
+                while (currentSelect.children.length > 0) {
+                    currentSelect.removeChild(currentSelect.lastChild);
+                }
+                
+                if (existingDefault) currentSelect.appendChild(existingDefault);
+
+
+                tempClubs.forEach(club => {
+                    const option = document.createElement('option');
+                    option.value = club;
+                    option.text = club;
+                    
+                    // Disable an option if it's selected in *another* dropdown
+                    if (selectedValues.includes(club) && club !== currentValue) {
+                        option.disabled = true;
+                    }
+                    
+                    // Re-select the option that was previously chosen in this dropdown
+                    if (club === currentValue) {
+                        option.selected = true;
+                    }
+
+                    currentSelect.appendChild(option);
+                });
+            });
+        }
+
+        selectElements.forEach(select => {
+            select.addEventListener('change', updateOptions);
+        });
+
+
+        // 3. Handle the form submission and mapping to Google Form entries
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Stop the default submission
+
+            const formElements = form.elements;
+            
+            // Collect the data from the form
+            const data = {
+                name: formElements.namedItem('name').value,
+                email: formElements.namedItem('email').value,
+                class: formElements.namedItem('class').value,
+                seat_number: formElements.namedItem('seat_number').value,
+                preference1: formElements.namedItem('preference1').value,
+                preference2: formElements.namedItem('preference2').value,
+                preference3: formElements.namedItem('preference3').value
+            };
+
+            // Map form data to Google Form 'entry' IDs
+            // The Google Form URL: https://docs.google.com/forms/d/e/1FAIpQLSfjxT2M0RN8kHF5hQExtwdjkceLdPt-b3rQytJzlxU6Mr6g3g/viewform?usp=pp_url&entry.1958155011=1&entry.1734264513=2&entry.768838269=3&entry.971579260=4&entry.1140425096=5&entry.1383795737=6
+            const googleFormEntries = {
+                'entry.1958155011': data.name,      // 1st entry ID: Name
+                'entry.1734264513': data.email,     // 2nd entry ID: E-mail
+                'entry.768838269': data.class,      // 3rd entry ID: Class (班級)
+                'entry.971579260': data.seat_number,// 4th entry ID: Seat Number (座號)
+                'entry.1140425096': data.preference1,// 5th entry ID: Preference 1 (第一志願)
+                'entry.1383795737': data.preference2,// 6th entry ID: Preference 2 (第二志願)
+                // Note: Preference 3 (第三志願) is not explicitly mapped to the provided 6 entry IDs.
+                // If you need a 7th entry ID, you'll need to update the mapping.
+                // Assuming you intended to map the first 6 form fields to the 6 entry IDs you provided.
+            };
+
+            // Build the URL-encoded query string
+            const queryString = Object.keys(googleFormEntries)
+                .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(googleFormEntries[key]))
+                .join('&');
+
+            // The submission URL for Google Forms is the 'formResponse?' part
+            const submitUrl = form.action + queryString;
+
+            // Submit the form by redirecting or by fetching (using fetch is better for AJAX-like submission)
+            // For simplicity and to avoid cross-origin issues with a simple redirection:
+            // window.location.href = submitUrl; 
+            
+            // *Using fetch for a smoother AJAX submission (no page refresh)*
+            fetch(submitUrl, {
+                method: 'POST',
+                mode: 'no-cors' // Must use 'no-cors' for Google Forms
+            })
+            .then(() => {
+                // Show success message and reset the form
+                const alertSuccess = form.querySelector('[data-form-alert]');
+                if (alertSuccess) {
+                    alertSuccess.style.display = 'block';
+                    setTimeout(() => alertSuccess.style.display = 'none', 5000); // Hide after 5 seconds
+                }
+                form.reset();
+                populateSelects(); // Reset dropdowns
+                updateOptions();
+            })
+            .catch(() => {
+                // Show error message
+                const alertDanger = form.querySelector('[data-form-alert-danger]');
+                if (alertDanger) {
+                    alertDanger.style.display = 'block';
+                    setTimeout(() => alertDanger.style.display = 'none', 5000);
+                }
+            });
+        });
+        
+        // Initial call to set up the options
+        updateOptions();
+    });
+</script>
             </div>
         </div>
     </div>
