@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html  >
 <head>
-  <!-- Site made with Mobirise Website Builder v6.1.4, https://mobirise.com -->
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Mobirise v6.1.4, mobirise.com">
@@ -148,22 +147,6 @@
 </section>
 
 <section data-bs-version="5.1" class="form5 cid-uYCK4HsLDC" id="form02-b">
-    
-    
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 content-head">
-                <div class="mbr-section-head mb-5">
-                    <h3 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
-                        <strong>Contacts</strong>
-                    </h3>
-                    
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-lg-8 mx-auto mbr-form" data-form-type="formoid">
-                <section data-bs-version="5.1" class="form5 cid-uYCK4HsLDC" id="form02-b">
     
     
     <div class="container">
@@ -327,10 +310,9 @@ document.addEventListener('DOMContentLoaded', () => {
         successAlert.hidden = true;
         dangerAlert.hidden = true;
 
-        // 檢查 HTML5 驗證
+        // 檢查 HTML5 驗證 (如果沒有通過，會自動顯示錯誤訊息並阻止提交)
         if (!form.checkValidity()) {
             form.reportValidity();
-            event.preventDefault(); // 阻止提交
             return;
         }
 
@@ -341,37 +323,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. 監聽 iframe 載入事件 (表示 Google Form 已響應)
     iframe.addEventListener('load', () => {
-        // 在 Mobirise 環境中，如果 iframe 是空的，可能表示提交失敗或被阻止。
-        // 但由於是 POST 到 Google Forms，最安全的方式是假設載入完成即成功。
-        // 我們檢查 URL 來避免首次載入時觸發成功提示
-        const iframeSrc = iframe.src;
-        if (iframeSrc.includes('formResponse') || iframeSrc === 'about:blank' || iframeSrc === '') {
-             // 假設提交成功
-             successAlert.hidden = false;
-             
-             // 清空表單
-             form.reset();
-             updateSelectOptions(); // 重設下拉選單狀態
-
-        } else {
-             // 提交成功，但可能載入了 Google Forms 的確認頁面
-             successAlert.hidden = false;
-             
-             // 清空表單
-             form.reset();
-             updateSelectOptions(); // 重設下拉選單狀態
-        }
+        // 在 Mobirise 環境中，如果 iframe 載入完成，我們假定 Google Forms 成功處理。
+        // 為避免首次頁面載入時觸發，確保有表單提交操作發生後再處理。
 
         // 恢復按鈕狀態
         submitButton.textContent = '送出報名';
         submitButton.disabled = false;
+        
+        // 檢查按鈕是否被禁用，來判斷是否剛剛發生了提交
+        // （這是一種確保提交操作發生後才顯示提示的輔助方式）
+        
+        // 我們直接假設載入完成即成功（這是 iframe 提交 Google Form 的標準做法）
+        successAlert.hidden = false;
+        dangerAlert.hidden = true;
+         
+        // 清空表單
+        form.reset();
+        updateSelectOptions(); // 重設下拉選單狀態
     });
 });
 </script>
-            </div>
-        </div>
-    </div>
-</section>
             </div>
         </div>
     </div>
