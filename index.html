@@ -192,12 +192,12 @@
 }
 </style>
 
-<form action="https://docs.google.com/forms/d/e/1FAIpQLSfjxT2M0RN8kHF5hQExtwdjkceLdPt-b3rQytJzlxU6Mr6g3g/formResponse" method="POST" class="mbr-form form-with-styler" id="clubRegistrationForm" target="submission_target">
+<form action="https://docs.google.com/forms/d/e/1FAIpQLSfjxT2M0RN8kHF5hQExtwdjkceLdPt-b3rQytJzlxU6Mr6g3g/formResponse" method="POST" class="mbr-form form-with-styler" id="clubRegistrationForm">
     
     <div class="row">
         <div hidden="hidden" id="form-alert-success" data-form-alert="" class="alert alert-success col-12">報名資料已成功送出！</div>
         <div hidden="hidden" id="form-alert-danger" data-form-alert-danger="" class="alert alert-danger col-12">
-            Oops...! 送出資料時發生錯誤，或 Google 表單 Entry ID 可能不正確。
+            Oops...! 送出資料時發生錯誤，請檢查您的網路連線或 Google 表單 Entry ID。
         </div>
     </div>
 
@@ -243,15 +243,17 @@
     </div>
 </form>
 
-<iframe name="submission_target" id="submission_target" style="display:none; width: 0; height: 0; border: none;"></iframe>
-
-
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('clubRegistrationForm');
     const submitButton = document.getElementById('submitButton');
     const successAlert = document.getElementById('form-alert-success');
     const dangerAlert = document.getElementById('form-alert-danger');
+    const formActionURL = form.action; 
+
+    // **強制移除可能干擾提交的 Mobirise 屬性**
+    form.removeAttribute('data-form-type');
+    form.classList.remove('form-with-styler');
     
     // 獲取所有志願選單
     const selects = [
@@ -302,42 +304,58 @@ document.addEventListener('DOMContentLoaded', () => {
         select.addEventListener('change', updateSelectOptions);
     });
     
-    // --- 核心提交處理：使用 setTimeout 確保按鈕恢復和視覺反饋 ---
+    // --- 核心提交處理：使用 AJAX (fetch) 繞過 Mobirise 衝突 ---
 
-    form.addEventListener('submit', (event) => {
-        // 隱藏所有提示
-        successAlert.hidden = true;
-        dangerAlert.hidden = true;
-
-        // 檢查 HTML5 驗證
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault(); // 阻止所有原生和 Mobirise 的提交行為
+        
+        // 驗證表單
         if (!form.checkValidity()) {
-            // 讓瀏覽器顯示原生驗證錯誤
             form.reportValidity();
             return;
         }
 
-        // 設置按鈕狀態
         submitButton.textContent = '送出中...';
         submitButton.disabled = true;
-        
-        // **關鍵改變**：不再監聽 iframe load 事件，而是等待 2 秒後假設成功
-        // 瀏覽器將原生執行 form POST 到 iframe
-        setTimeout(() => {
-            // 假設提交成功
-            successAlert.hidden = false;
-            dangerAlert.hidden = true;
-            
-            // 清空表單
-            form.reset();
-            updateSelectOptions(); // 重設下拉選單狀態
+        successAlert.hidden = true;
+        dangerAlert.hidden = true;
 
-            // 恢復按鈕狀態
-            submitButton.textContent = '送出報名';
-            submitButton.disabled = false;
-        }, 2000); // 給予 2 秒時間讓 Google Forms 處理 POST 請求
+        const formData = new FormData(form);
         
-        // 注意：這裡沒有 event.preventDefault()，讓表單執行原生提交到 iframe
+        try {
+            // 發送請求到 Google Forms
+            // mode: 'no-cors' 是必須的，用來解決跨域問題
+            const response = await fetch(formActionURL, {
+                method: 'POST',
+                mode: 'no-cors', 
+                body: formData
+            });
+
+            // 由於使用 'no-cors'，無法確認 Google Form 是否真的收到。
+            // 我們只能假設成功，並等待 500ms 讓資料處理完成。
+            
+            setTimeout(() => {
+                successAlert.hidden = false;
+                
+                // 清空表單
+                form.reset();
+                updateSelectOptions(); // 重設下拉選單狀態
+
+                // 恢復按鈕狀態
+                submitButton.textContent = '送出報名';
+                submitButton.disabled = false;
+            }, 500);
+
+
+        } catch (error) {
+            console.error('Submission Error:', error);
+            // 顯示錯誤訊息
+            dangerAlert.hidden = false;
+            submitButton.textContent = '送出報名cc';
+            submitButton.disabled = false;
+        }
     });
+
 });
 </script>
             </div>
