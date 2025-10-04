@@ -186,7 +186,8 @@
 .btn-fixed-state {
     transition: transform 0.2s;
 }
-.btn-fixed-state:active {
+/* 確保按鈕在點擊後能恢復 */
+.btn-fixed-state:active, .btn-fixed-state:focus {
     transform: translateY(0) !important;
 }
 </style>
@@ -196,7 +197,7 @@
     <div class="row">
         <div hidden="hidden" id="form-alert-success" data-form-alert="" class="alert alert-success col-12">報名資料已成功送出！</div>
         <div hidden="hidden" id="form-alert-danger" data-form-alert-danger="" class="alert alert-danger col-12">
-            Oops...! 送出資料時發生錯誤或連線逾時。
+            Oops...! 送出資料時發生錯誤，或 Google 表單 Entry ID 可能不正確。
         </div>
     </div>
 
@@ -242,7 +243,7 @@
     </div>
 </form>
 
-<iframe name="submission_target" id="submission_target" style="display:none;"></iframe>
+<iframe name="submission_target" id="submission_target" style="display:none; width: 0; height: 0; border: none;"></iframe>
 
 
 <script>
@@ -251,7 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitButton = document.getElementById('submitButton');
     const successAlert = document.getElementById('form-alert-success');
     const dangerAlert = document.getElementById('form-alert-danger');
-    const iframe = document.getElementById('submission_target');
     
     // 獲取所有志願選單
     const selects = [
@@ -264,16 +264,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const allClubs = ["資研社", "魔術社", "童軍社", "康輔社", "文學社", "英詩社"];
 
     /**
-     * 根據當前已選的選項，更新所有下拉式選單的可用選項。（連動邏輯）
+     * 志願連動邏輯
      */
     function updateSelectOptions() {
-        // 獲取所有下拉式選單中，當前已選的值 (排除空值)
         const selectedValues = selects
             .map(s => s.value)
             .filter(v => v !== ""); 
 
         selects.forEach(currentSelect => {
             const currentValue = currentSelect.value;
+            // 清空並重建選項
             currentSelect.innerHTML = `<option value="" disabled ${currentValue === "" ? 'selected' : ''}>${currentSelect.options[0].text}</option>`;
 
             allClubs.forEach(club => {
@@ -302,16 +302,16 @@ document.addEventListener('DOMContentLoaded', () => {
         select.addEventListener('change', updateSelectOptions);
     });
     
-    // --- 核心提交處理：使用 iframe ---
+    // --- 核心提交處理：使用 setTimeout 確保按鈕恢復和視覺反饋 ---
 
-    // 1. 表單提交時，設置狀態
     form.addEventListener('submit', (event) => {
         // 隱藏所有提示
         successAlert.hidden = true;
         dangerAlert.hidden = true;
 
-        // 檢查 HTML5 驗證 (如果沒有通過，會自動顯示錯誤訊息並阻止提交)
+        // 檢查 HTML5 驗證
         if (!form.checkValidity()) {
+            // 讓瀏覽器顯示原生驗證錯誤
             form.reportValidity();
             return;
         }
@@ -319,27 +319,24 @@ document.addEventListener('DOMContentLoaded', () => {
         // 設置按鈕狀態
         submitButton.textContent = '送出中...';
         submitButton.disabled = true;
-    });
-
-    // 2. 監聽 iframe 載入事件 (表示 Google Form 已響應)
-    iframe.addEventListener('load', () => {
-        // 在 Mobirise 環境中，如果 iframe 載入完成，我們假定 Google Forms 成功處理。
-        // 為避免首次頁面載入時觸發，確保有表單提交操作發生後再處理。
-
-        // 恢復按鈕狀態
-        submitButton.textContent = '送出報名';
-        submitButton.disabled = false;
         
-        // 檢查按鈕是否被禁用，來判斷是否剛剛發生了提交
-        // （這是一種確保提交操作發生後才顯示提示的輔助方式）
+        // **關鍵改變**：不再監聽 iframe load 事件，而是等待 2 秒後假設成功
+        // 瀏覽器將原生執行 form POST 到 iframe
+        setTimeout(() => {
+            // 假設提交成功
+            successAlert.hidden = false;
+            dangerAlert.hidden = true;
+            
+            // 清空表單
+            form.reset();
+            updateSelectOptions(); // 重設下拉選單狀態
+
+            // 恢復按鈕狀態
+            submitButton.textContent = '送出報名';
+            submitButton.disabled = false;
+        }, 2000); // 給予 2 秒時間讓 Google Forms 處理 POST 請求
         
-        // 我們直接假設載入完成即成功（這是 iframe 提交 Google Form 的標準做法）
-        successAlert.hidden = false;
-        dangerAlert.hidden = true;
-         
-        // 清空表單
-        form.reset();
-        updateSelectOptions(); // 重設下拉選單狀態
+        // 注意：這裡沒有 event.preventDefault()，讓表單執行原生提交到 iframe
     });
 });
 </script>
