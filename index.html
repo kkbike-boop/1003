@@ -163,46 +163,83 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-lg-8 mx-auto mbr-form" data-form-type="formoid">
-                <form id="custom-registration-form" action="https://docs.google.com/forms/d/e/1FAIpQLSfjxT2M0RN8kHF5hQExtwdjkceLdPt-b3rQytJzlxU6Mr6g3g/formResponse?" method="POST" class="mbr-form form-with-styler">
+                <style>
+/* 簡單的 CSS 樣式，讓新增的元素看起來與原表單風格一致 */
+.form-control {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    appearance: none;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+.form-group.mb-3 {
+    margin-bottom: 1rem !important;
+}
+</style>
+
+<form action="https://docs.google.com/forms/d/e/1FAIpQLSfjxT2M0RN8kHF5hQExtwdjkceLdPt-b3rQytJzlxU6Mr6g3g/formResponse" method="POST" class="mbr-form form-with-styler" id="clubRegistrationForm">
     <div class="row">
-        <div hidden="hidden" data-form-alert="" class="alert alert-success col-12">感謝您填寫表單！</div>
+        <div hidden="hidden" data-form-alert="" class="alert alert-success col-12">報名資料已成功送出！</div>
         <div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">
-            哎呀...！發生了一些問題！
+            Oops...! 送出資料時發生錯誤。
         </div>
     </div>
+
     <div class="dragArea row">
+        
         <div class="col-md col-sm-12 form-group mb-3" data-for="name">
-            <input type="text" name="name" placeholder="姓名" data-form-field="name" class="form-control" required id="name-form-custom">
+            <input type="text" name="entry.1958155011" placeholder="姓名" data-form-field="name" class="form-control" required>
         </div>
+
+        <div class="col-md col-sm-12 form-group mb-3" data-for="class">
+            <input type="text" name="entry.246289483" placeholder="班級" data-form-field="class" class="form-control" required>
+        </div>
+        
         <div class="col-md col-sm-12 form-group mb-3" data-for="email">
-            <input type="email" name="email" placeholder="E-mail" data-form-field="email" class="form-control" required id="email-form-custom">
-        </div>
-        <div class="col-12 form-group mb-3" data-for="class">
-            <input type="text" name="class" placeholder="班級" data-form-field="class" class="form-control" required id="class-form-custom">
-        </div>
-        <div class="col-12 form-group mb-3" data-for="seat_number">
-            <input type="number" name="seat_number" placeholder="座號" data-form-field="seat_number" class="form-control" required id="seat_number-form-custom">
+            <input type="email" name="entry.1734264513" placeholder="E-mail" data-form-field="email" class="form-control" required>
         </div>
 
-        <div class="col-12 form-group mb-3">
-            <label for="preference1-form-custom">第一志願</label>
-            <select name="preference1" data-form-field="preference1" class="form-control preference-select" required id="preference1-form-custom">
-                <option value="" disabled selected>請選擇</option>
-            </select>
+        <div class="col-md col-sm-12 form-group mb-3" data-for="seat_number">
+            <input type="number" name="entry.768838269" placeholder="座號" data-form-field="seat_number" class="form-control" required>
         </div>
-        <div class="col-12 form-group mb-3">
-            <label for="preference2-form-custom">第二志願</label>
-            <select name="preference2" data-form-field="preference2" class="form-control preference-select" required id="preference2-form-custom">
-                <option value="" disabled selected>請選擇</option>
-            </select>
-        </div>
-        <div class="col-12 form-group mb-3">
-            <label for="preference3-form-custom">第三志願</label>
-            <select name="preference3" data-form-field="preference3" class="form-control preference-select" required id="preference3-form-custom">
-                <option value="" disabled selected>請選擇</option>
+
+        <script>
+            const clubOptions = [
+                "資研社", "魔術社", "童軍社", "康輔社", "文學社", "英詩社"
+            ];
+            const clubEntries = {
+                'first_choice': 'entry.971579260',
+                'second_choice': 'entry.1140425096',
+                'third_choice': 'entry.1383795737'
+            };
+        </script>
+        
+        <div class="col-md col-sm-12 form-group mb-3" data-for="choice1">
+            <select id="first_choice" name="entry.971579260" class="form-control" required>
+                <option value="" disabled selected>請選擇第一志願</option>
             </select>
         </div>
 
+        <div class="col-md col-sm-12 form-group mb-3" data-for="choice2">
+            <select id="second_choice" name="entry.1140425096" class="form-control" required>
+                <option value="" disabled selected>請選擇第二志願</option>
+            </select>
+        </div>
+
+        <div class="col-md col-sm-12 form-group mb-3" data-for="choice3">
+            <select id="third_choice" name="entry.1383795737" class="form-control" required>
+                <option value="" disabled selected>請選擇第三志願</option>
+            </select>
+        </div>
+        
         <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
             <button type="submit" class="btn btn-primary display-7">送出報名</button>
         </div>
@@ -210,159 +247,86 @@
 </form>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const clubs = ["資研社", "魔術社", "童軍社", "康輔社", "文學社", "英詩社"];
-        const selectElements = document.querySelectorAll('.preference-select');
-        const form = document.getElementById('custom-registration-form');
+document.addEventListener('DOMContentLoaded', () => {
+    // 獲取所有志願選單
+    const selects = [
+        document.getElementById('first_choice'),
+        document.getElementById('second_choice'),
+        document.getElementById('third_choice')
+    ];
+    
+    // 所有可選的社團名稱
+    const allClubs = ["資研社", "魔術社", "童軍社", "康輔社", "文學社", "英詩社"];
 
-        // 1. Populate all dropdowns with options
-        function populateSelects() {
-            selectElements.forEach(select => {
-                // Keep the default "請選擇" option
-                let existingOptions = select.querySelector('option[value=""]');
-                if (!existingOptions) {
-                    existingOptions = document.createElement('option');
-                    existingOptions.value = "";
-                    existingOptions.text = "請選擇";
-                    existingOptions.disabled = true;
-                    existingOptions.selected = true;
-                    select.appendChild(existingOptions);
-                }
-                
-                // Clear and re-populate with all clubs
-                while (select.children.length > 1) { // Clear all except the first "請選擇"
-                    select.removeChild(select.lastChild);
-                }
-                
-                clubs.forEach(club => {
-                    const option = document.createElement('option');
-                    option.value = club;
-                    option.text = club;
-                    select.appendChild(option);
-                });
-            });
-        }
-        
-        populateSelects();
+    /**
+     * 根據當前已選的選項，更新所有下拉式選單的可用選項。
+     */
+    function updateSelectOptions() {
+        // 獲取所有下拉式選單中，當前已選的值 (排除空值)
+        const selectedValues = selects
+            .map(s => s.value)
+            .filter(v => v !== ""); 
 
-        // 2. Handle the selection logic (disable already selected options)
-        function updateOptions() {
-            const selectedValues = Array.from(selectElements).map(select => select.value).filter(val => val !== "");
-
-            selectElements.forEach(currentSelect => {
-                const currentValue = currentSelect.value;
-                
-                // Clear the options list
-                let tempClubs = [...clubs];
-                
-                // Keep the "請選擇" option
-                let existingDefault = currentSelect.querySelector('option[value=""]');
-
-                // Clear and re-populate
-                while (currentSelect.children.length > 0) {
-                    currentSelect.removeChild(currentSelect.lastChild);
-                }
-                
-                if (existingDefault) currentSelect.appendChild(existingDefault);
-
-
-                tempClubs.forEach(club => {
-                    const option = document.createElement('option');
-                    option.value = club;
-                    option.text = club;
-                    
-                    // Disable an option if it's selected in *another* dropdown
-                    if (selectedValues.includes(club) && club !== currentValue) {
-                        option.disabled = true;
-                    }
-                    
-                    // Re-select the option that was previously chosen in this dropdown
-                    if (club === currentValue) {
-                        option.selected = true;
-                    }
-
-                    currentSelect.appendChild(option);
-                });
-            });
-        }
-
-        selectElements.forEach(select => {
-            select.addEventListener('change', updateOptions);
-        });
-
-
-        // 3. Handle the form submission and mapping to Google Form entries
-        form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Stop the default submission
-
-            const formElements = form.elements;
+        selects.forEach(currentSelect => {
+            // 存儲當前選單的舊值
+            const currentValue = currentSelect.value;
             
-            // Collect the data from the form
-            const data = {
-                name: formElements.namedItem('name').value,
-                email: formElements.namedItem('email').value,
-                class: formElements.namedItem('class').value,
-                seat_number: formElements.namedItem('seat_number').value,
-                preference1: formElements.namedItem('preference1').value,
-                preference2: formElements.namedItem('preference2').value,
-                preference3: formElements.namedItem('preference3').value
-            };
+            // 清空當前選單 (保留預設的 "請選擇..." 選項)
+            currentSelect.innerHTML = `<option value="" disabled ${currentValue === "" ? 'selected' : ''}>${currentSelect.options[0].text}</option>`;
 
-            // Map form data to Google Form 'entry' IDs
-            // The Google Form URL: https://docs.google.com/forms/d/e/1FAIpQLSfjxT2M0RN8kHF5hQExtwdjkceLdPt-b3rQytJzlxU6Mr6g3g/viewform?usp=pp_url&entry.1958155011=1&entry.1734264513=2&entry.768838269=3&entry.971579260=4&entry.1140425096=5&entry.1383795737=6
-            const googleFormEntries = {
-                'entry.1958155011': data.name,      // 1st entry ID: Name
-                'entry.1734264513': data.email,     // 2nd entry ID: E-mail
-                'entry.768838269': data.class,      // 3rd entry ID: Class (班級)
-                'entry.971579260': data.seat_number,// 4th entry ID: Seat Number (座號)
-                'entry.1140425096': data.preference1,// 5th entry ID: Preference 1 (第一志願)
-                'entry.1383795737': data.preference2,// 6th entry ID: Preference 2 (第二志願)
-                // Note: Preference 3 (第三志願) is not explicitly mapped to the provided 6 entry IDs.
-                // If you need a 7th entry ID, you'll need to update the mapping.
-                // Assuming you intended to map the first 6 form fields to the 6 entry IDs you provided.
-            };
+            // 遍歷所有社團，決定是否加入到當前選單
+            allClubs.forEach(club => {
+                const option = document.createElement('option');
+                option.value = club;
+                option.textContent = club;
 
-            // Build the URL-encoded query string
-            const queryString = Object.keys(googleFormEntries)
-                .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(googleFormEntries[key]))
-                .join('&');
-
-            // The submission URL for Google Forms is the 'formResponse?' part
-            const submitUrl = form.action + queryString;
-
-            // Submit the form by redirecting or by fetching (using fetch is better for AJAX-like submission)
-            // For simplicity and to avoid cross-origin issues with a simple redirection:
-            // window.location.href = submitUrl; 
-            
-            // *Using fetch for a smoother AJAX submission (no page refresh)*
-            fetch(submitUrl, {
-                method: 'POST',
-                mode: 'no-cors' // Must use 'no-cors' for Google Forms
-            })
-            .then(() => {
-                // Show success message and reset the form
-                const alertSuccess = form.querySelector('[data-form-alert]');
-                if (alertSuccess) {
-                    alertSuccess.style.display = 'block';
-                    setTimeout(() => alertSuccess.style.display = 'none', 5000); // Hide after 5 seconds
+                // 判斷：如果這個社團已經在其他選單中被選取，就禁用它
+                // **AND** 判斷：如果這個社團是當前選單自己原本的值，就保留它
+                const isSelectedElsewhere = selectedValues.includes(club) && club !== currentValue;
+                
+                if (isSelectedElsewhere) {
+                    option.disabled = true;
                 }
-                form.reset();
-                populateSelects(); // Reset dropdowns
-                updateOptions();
-            })
-            .catch(() => {
-                // Show error message
-                const alertDanger = form.querySelector('[data-form-alert-danger]');
-                if (alertDanger) {
-                    alertDanger.style.display = 'block';
-                    setTimeout(() => alertDanger.style.display = 'none', 5000);
+                
+                // 恢復當前選單原本選中的值
+                if (club === currentValue) {
+                    option.selected = true;
                 }
+                
+                currentSelect.appendChild(option);
             });
         });
-        
-        // Initial call to set up the options
-        updateOptions();
+    }
+
+    // 初始化所有選單的選項
+    updateSelectOptions();
+    
+    // 為所有選單添加 change 事件監聽器，當選擇改變時就更新所有選單
+    selects.forEach(select => {
+        select.addEventListener('change', updateSelectOptions);
     });
+    
+    // --- 表單送出處理：直接提交給 Google Form ---
+    const form = document.getElementById('clubRegistrationForm');
+    
+    form.addEventListener('submit', (event) => {
+        // 阻止預設的表單提交行為 (避免 Mobirise 的邏輯干擾)
+        // 由於我們直接將 action 改為 Google Form 的 URL，其實不攔截也能送出，
+        // 但攔截可以確保所有 JS 邏輯執行完畢。
+        // event.preventDefault(); 
+        
+        // 由於 HTML 中的 input name 屬性已經直接對應到 Google Form 的 entry IDs
+        // 例如：<input type="text" name="entry.1958155011" ...>
+        // 瀏覽器會自動將這些欄位的值正確地 POST 到 Google Form 的 formResponse 網址。
+        
+        // 因此，不需要複雜的 JS 來重構 URL 或使用 AJAX，直接讓表單提交即可。
+        // （上面阻止提交的註釋取消，讓瀏覽器處理正常的 POST）
+        
+        // 可選：可以手動觸發表單提交來繞過 Mobirise 的驗證邏輯（如果有的話）
+        // form.submit();
+    });
+
+});
 </script>
             </div>
         </div>
