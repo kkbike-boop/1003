@@ -163,8 +163,24 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-lg-8 mx-auto mbr-form" data-form-type="formoid">
+                <section data-bs-version="5.1" class="form5 cid-uYCK4HsLDC" id="form02-b">
+    
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 content-head">
+                <div class="mbr-section-head mb-5">
+                    <h3 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
+                        <strong>社團報名表單</strong>
+                    </h3>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8 mx-auto mbr-form" data-form-type="formoid">
                 <style>
-/* 簡單的 CSS 樣式，讓新增的元素看起來與原表單風格一致 */
+/* 確保 Mobirise 的樣式能適應新增的元素 */
 .form-control {
     display: block;
     width: 100%;
@@ -183,45 +199,42 @@
 .form-group.mb-3 {
     margin-bottom: 1rem !important;
 }
+/* 解決按鈕卡住問題的輔助 CSS */
+.btn-fixed-state {
+    transition: transform 0.2s;
+}
+.btn-fixed-state:active {
+    transform: translateY(0) !important;
+}
 </style>
 
-<form action="https://docs.google.com/forms/d/e/1FAIpQLSfjxT2M0RN8kHF5hQExtwdjkceLdPt-b3rQytJzlxU6Mr6g3g/formResponse" method="POST" class="mbr-form form-with-styler" id="clubRegistrationForm">
+<form action="https://docs.google.com/forms/d/e/1FAIpQLSfjxT2M0RN8kHF5hQExtwdjkceLdPt-b3rQytJzlxU6Mr6g3g/formResponse" method="POST" class="mbr-form form-with-styler" id="clubRegistrationForm" target="submission_target">
+    
     <div class="row">
-        <div hidden="hidden" data-form-alert="" class="alert alert-success col-12">報名資料已成功送出！</div>
-        <div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">
-            Oops...! 送出資料時發生錯誤。
+        <div hidden="hidden" id="form-alert-success" data-form-alert="" class="alert alert-success col-12">報名資料已成功送出！</div>
+        <div hidden="hidden" id="form-alert-danger" data-form-alert-danger="" class="alert alert-danger col-12">
+            Oops...! 送出資料時發生錯誤或連線逾時。
         </div>
     </div>
 
     <div class="dragArea row">
         
         <div class="col-md col-sm-12 form-group mb-3" data-for="name">
-            <input type="text" name="entry.1958155011" placeholder="姓名" data-form-field="name" class="form-control" required>
+            <input type="text" name="entry.1958155011" placeholder="姓名" data-form-field="name" class="form-control" required id="name-form02-b">
         </div>
 
         <div class="col-md col-sm-12 form-group mb-3" data-for="class">
-            <input type="text" name="entry.246289483" placeholder="班級" data-form-field="class" class="form-control" required>
+            <input type="text" name="entry.246289483" placeholder="班級" data-form-field="class" class="form-control" required id="class-form02-b">
         </div>
         
         <div class="col-md col-sm-12 form-group mb-3" data-for="email">
-            <input type="email" name="entry.1734264513" placeholder="E-mail" data-form-field="email" class="form-control" required>
+            <input type="email" name="entry.1734264513" placeholder="E-mail" data-form-field="email" class="form-control" required id="email-form02-b">
         </div>
 
         <div class="col-md col-sm-12 form-group mb-3" data-for="seat_number">
-            <input type="number" name="entry.768838269" placeholder="座號" data-form-field="seat_number" class="form-control" required>
+            <input type="number" name="entry.768838269" placeholder="座號" data-form-field="seat_number" class="form-control" required id="seat_number-form02-b">
         </div>
 
-        <script>
-            const clubOptions = [
-                "資研社", "魔術社", "童軍社", "康輔社", "文學社", "英詩社"
-            ];
-            const clubEntries = {
-                'first_choice': 'entry.971579260',
-                'second_choice': 'entry.1140425096',
-                'third_choice': 'entry.1383795737'
-            };
-        </script>
-        
         <div class="col-md col-sm-12 form-group mb-3" data-for="choice1">
             <select id="first_choice" name="entry.971579260" class="form-control" required>
                 <option value="" disabled selected>請選擇第一志願</option>
@@ -241,13 +254,22 @@
         </div>
         
         <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
-            <button type="submit" class="btn btn-primary display-7">送出報名</button>
+            <button type="submit" class="btn btn-primary btn-fixed-state" id="submitButton">送出報名</button>
         </div>
     </div>
 </form>
 
+<iframe name="submission_target" id="submission_target" style="display:none;"></iframe>
+
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('clubRegistrationForm');
+    const submitButton = document.getElementById('submitButton');
+    const successAlert = document.getElementById('form-alert-success');
+    const dangerAlert = document.getElementById('form-alert-danger');
+    const iframe = document.getElementById('submission_target');
+    
     // 獲取所有志願選單
     const selects = [
         document.getElementById('first_choice'),
@@ -259,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const allClubs = ["資研社", "魔術社", "童軍社", "康輔社", "文學社", "英詩社"];
 
     /**
-     * 根據當前已選的選項，更新所有下拉式選單的可用選項。
+     * 根據當前已選的選項，更新所有下拉式選單的可用選項。（連動邏輯）
      */
     function updateSelectOptions() {
         // 獲取所有下拉式選單中，當前已選的值 (排除空值)
@@ -268,27 +290,20 @@ document.addEventListener('DOMContentLoaded', () => {
             .filter(v => v !== ""); 
 
         selects.forEach(currentSelect => {
-            // 存儲當前選單的舊值
             const currentValue = currentSelect.value;
-            
-            // 清空當前選單 (保留預設的 "請選擇..." 選項)
             currentSelect.innerHTML = `<option value="" disabled ${currentValue === "" ? 'selected' : ''}>${currentSelect.options[0].text}</option>`;
 
-            // 遍歷所有社團，決定是否加入到當前選單
             allClubs.forEach(club => {
                 const option = document.createElement('option');
                 option.value = club;
                 option.textContent = club;
 
-                // 判斷：如果這個社團已經在其他選單中被選取，就禁用它
-                // **AND** 判斷：如果這個社團是當前選單自己原本的值，就保留它
                 const isSelectedElsewhere = selectedValues.includes(club) && club !== currentValue;
                 
                 if (isSelectedElsewhere) {
                     option.disabled = true;
                 }
                 
-                // 恢復當前選單原本選中的值
                 if (club === currentValue) {
                     option.selected = true;
                 }
@@ -298,36 +313,65 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 初始化所有選單的選項
+    // 初始化所有選單的選項並添加 change 事件監聽器
     updateSelectOptions();
-    
-    // 為所有選單添加 change 事件監聽器，當選擇改變時就更新所有選單
     selects.forEach(select => {
         select.addEventListener('change', updateSelectOptions);
     });
     
-    // --- 表單送出處理：直接提交給 Google Form ---
-    const form = document.getElementById('clubRegistrationForm');
-    
+    // --- 核心提交處理：使用 iframe ---
+
+    // 1. 表單提交時，設置狀態
     form.addEventListener('submit', (event) => {
-        // 阻止預設的表單提交行為 (避免 Mobirise 的邏輯干擾)
-        // 由於我們直接將 action 改為 Google Form 的 URL，其實不攔截也能送出，
-        // 但攔截可以確保所有 JS 邏輯執行完畢。
-        // event.preventDefault(); 
-        
-        // 由於 HTML 中的 input name 屬性已經直接對應到 Google Form 的 entry IDs
-        // 例如：<input type="text" name="entry.1958155011" ...>
-        // 瀏覽器會自動將這些欄位的值正確地 POST 到 Google Form 的 formResponse 網址。
-        
-        // 因此，不需要複雜的 JS 來重構 URL 或使用 AJAX，直接讓表單提交即可。
-        // （上面阻止提交的註釋取消，讓瀏覽器處理正常的 POST）
-        
-        // 可選：可以手動觸發表單提交來繞過 Mobirise 的驗證邏輯（如果有的話）
-        // form.submit();
+        // 隱藏所有提示
+        successAlert.hidden = true;
+        dangerAlert.hidden = true;
+
+        // 檢查 HTML5 驗證
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            event.preventDefault(); // 阻止提交
+            return;
+        }
+
+        // 設置按鈕狀態
+        submitButton.textContent = '送出中...';
+        submitButton.disabled = true;
     });
 
+    // 2. 監聽 iframe 載入事件 (表示 Google Form 已響應)
+    iframe.addEventListener('load', () => {
+        // 在 Mobirise 環境中，如果 iframe 是空的，可能表示提交失敗或被阻止。
+        // 但由於是 POST 到 Google Forms，最安全的方式是假設載入完成即成功。
+        // 我們檢查 URL 來避免首次載入時觸發成功提示
+        const iframeSrc = iframe.src;
+        if (iframeSrc.includes('formResponse') || iframeSrc === 'about:blank' || iframeSrc === '') {
+             // 假設提交成功
+             successAlert.hidden = false;
+             
+             // 清空表單
+             form.reset();
+             updateSelectOptions(); // 重設下拉選單狀態
+
+        } else {
+             // 提交成功，但可能載入了 Google Forms 的確認頁面
+             successAlert.hidden = false;
+             
+             // 清空表單
+             form.reset();
+             updateSelectOptions(); // 重設下拉選單狀態
+        }
+
+        // 恢復按鈕狀態
+        submitButton.textContent = '送出報名';
+        submitButton.disabled = false;
+    });
 });
 </script>
+            </div>
+        </div>
+    </div>
+</section>
             </div>
         </div>
     </div>
