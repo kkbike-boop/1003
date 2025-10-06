@@ -46,8 +46,7 @@
     "uniqCompNum": 12,
     "versionPublish": "6.0.6",
     "publishType": "local",
-    "publishPath": "@PROJECT_PATH@",
-    "imageResize": true
+    "publishPath": "@PROJECT_PATH@"
   },
   "pages": {
     "index.html": {
